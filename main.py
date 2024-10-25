@@ -1,17 +1,20 @@
-from products import inserir_produto, exibir_produtos, criar_indice_produto, pesquisa_binaria_produto
-from accesses import inserir_acesso, exibir_acessos
+from products import (
+    inserir_produto, exibir_produtos, criar_indice_produto,
+    pesquisa_binaria_produto, excluir_produto
+)
+from accesses import (
+    inserir_acesso, exibir_acessos, excluir_acesso
+)
 
-# Menu para interagir com o sistema
-def menu():
+def menu_produtos():
     while True:
-        print("\nMenu:")
+        print("\nMenu de Produtos:")
         print("1. Inserir produto")
         print("2. Exibir todos os produtos")
         print("3. Criar índice de produtos")
         print("4. Pesquisar produto por ID")
-        print("5. Inserir acesso")
-        print("6. Exibir todos os acessos")
-        print("7. Sair")
+        print("5. Excluir produto por ID")
+        print("6. Voltar ao menu principal")
 
         opcao = input("Escolha uma opção: ")
 
@@ -40,23 +43,66 @@ def menu():
                 print("Produto não encontrado.")
         
         elif opcao == "5":
+            id_produto = input("ID do Produto para excluir: ")
+            excluir_produto(id_produto)
+            print("Produto excluído logicamente com sucesso!")
+
+        elif opcao == "6":
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
+
+def menu_acessos():
+    while True:
+        print("\nMenu de Acessos:")
+        print("1. Inserir acesso")
+        print("2. Exibir todos os acessos")
+        print("3. Excluir acesso por ID")
+        print("4. Voltar ao menu principal")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
             id_acesso = input("ID do Acesso: ")
             id_sessao = input("ID da Sessão: ")
             acao = input("Ação realizada: ")
             inserir_acesso(id_acesso, id_sessao, acao)
             print("Acesso inserido com sucesso!")
         
-        elif opcao == "6":
+        elif opcao == "2":
             print("\nAcessos:")
             exibir_acessos()
         
-        elif opcao == "7":
-            print("Saindo...")
+        elif opcao == "3":
+            id_acesso = input("ID do Acesso para excluir: ")
+            excluir_acesso(id_acesso)
+            print("Acesso excluído logicamente com sucesso!")
+
+        elif opcao == "4":
             break
-        
+
         else:
             print("Opção inválida. Tente novamente.")
 
-# Executa o menu
+def menu_principal():
+    while True:
+        print("\nMenu Principal:")
+        print("1. Gerenciar Produtos")
+        print("2. Gerenciar Acessos")
+        print("3. Sair")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            menu_produtos()
+        elif opcao == "2":
+            menu_acessos()
+        elif opcao == "3":
+            print("Saindo do programa.")
+            break
+        else:
+            print("Opção inválida. Tente novamente.")
+
 if __name__ == "__main__":
-    menu()
+    menu_principal()

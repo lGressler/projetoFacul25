@@ -61,3 +61,22 @@ def pesquisa_binaria_produto(id_busca):
             else:
                 high = mid - 1
     return None
+
+def excluir_produto(id_produto):
+    """
+    Exclui logicamente um produto pelo ID.
+    """
+    produtos_temp = []
+    with open(produto_file, "rb") as f:
+        while chunk := f.read(produto_struct.size):
+            registro = produto_struct.unpack(chunk)
+            if registro[0].decode().strip() == id_produto:
+                # Marca como excluído
+                produtos_temp.append((registro[0], registro[1], registro[2], registro[3], b'\x01'))
+            else:
+                produtos_temp.append(registro)
+
+    # Reescreve o arquivo com os registros atualizados
+    with open(produto_file, "wb") as f:
+        for registro in produtos_temp:
+            f.write(produto_struct.pack(*registro))
