@@ -89,3 +89,15 @@ Nos menus de produtos e acessos, as funções relacionadas a pesquisa binária p
 
 ## Geração de Índices
 A função gerar_indice_produto cria um arquivo de índice para otimizar a busca de registros no arquivo binário de produtos, utilizando chaves e posições.
+
+
+Falta:
+
+O código atual possui a estrutura básica para manipular produtos e acessos, mas ainda precisa de várias implementações e ajustes para atender completamente aos requisitos do trabalho. Para que o código atenda a todas as atividades descritas, você precisará implementar o seguinte:
+
+Funções para criar e gravar arquivos de dados em formato binário.
+Implementar registros de tamanho fixo com preenchimento de espaços.
+Criar e gerenciar arquivos de índice, com funções de pesquisa binária para acessá-los.
+Implementar lógica para a atualização dos índices ao adicionar ou remover registros.
+Documentar o código e preparar o projeto para publicação no GitHub.
+Se precisar de ajuda para implementar essas partes específicas, sinta-se à vontade para pedir!
