@@ -1,3 +1,6 @@
+import time
+from arvore import criar_indice_produto_arvore
+from hashtable import criar_indice_produto_hash, obter_produto_completo_hash
 from products import (
     inserir_produto, exibir_produtos, criar_indice_produto,
     pesquisa_binaria_produto, excluir_produto
@@ -36,11 +39,15 @@ def menu_produtos():
         
         elif opcao == "4":
             id_busca = input("Digite o ID do produto para buscar: ")
+            start_time = time.time()
             resultado = pesquisa_binaria_produto(id_busca)
+            end_time = time.time()
             if resultado:
                 print(f"Produto encontrado: ID: {resultado[0]}, Marca: {resultado[1]}, Nome: {resultado[2]}, Preço: {resultado[3]}")
             else:
                 print("Produto não encontrado.")
+            
+            print(f"Tempo de busca binária: {end_time - start_time:.6f} segundos")
         
         elif opcao == "5":
             id_produto = input("ID do Produto para excluir: ")
@@ -97,13 +104,66 @@ def menu_acessos():
 
         else:
             print("Opção inválida. Tente novamente.")
+            
+def menu_memoria():
+    arvore_bplus = criar_indice_produto_arvore()  # Criar a árvore B+ na memória
+    tabela_hash = criar_indice_produto_hash()  # Criar a tabela hash na memória
+
+    while True:
+        print("\nMenu de Memória:")
+        print("1. Exibir produtos")
+        print("2. Consultar produto por ID (Índice Memória / árvore B+)")
+        print("3. Consultar produto por ID (Tabela Hash)")
+        print("4. Voltar ao menu principal")
+
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            print("\nProdutos:")
+            exibir_produtos()
+        
+        elif opcao == "2":
+            id_busca = input("Digite o ID do produto para buscar: ").upper()
+            start_time = time.time()
+            resultado = arvore_bplus.buscar(id_busca)  # Buscar o produto na árvore B+
+            end_time = time.time()
+            if resultado:
+                id_produto, marca, nome, preco = resultado
+                print(f"Produto encontrado: ID: {id_produto}, Marca: {marca}, Nome: {nome}, Preço: {preco:.2f}")
+            else:
+                print("Produto não encontrado.")
+                
+            print(f"Tempo de busca na árvore B+: {end_time - start_time:.6f} segundos")
+        
+        elif opcao == "3":
+            print("\nProdutos na Tabela Hash:")
+            tabela_hash.exibir_tabela()
+            
+            id_busca = input("Digite o ID do produto para buscar: ").upper()
+            start_time = time.time()
+            resultado = obter_produto_completo_hash(id_busca, tabela_hash)  # Buscar o produto na tabela hash
+            end_time = time.time()
+            if resultado:
+                id_produto, marca, nome, preco = resultado
+                print(f"Produto encontrado: ID: {id_produto}, Marca: {marca}, Nome: {nome}, Preço: {preco:.2f}")
+            else:
+                print("Produto não encontrado.")
+                
+            print(f"Tempo de busca na Tabela Hash: {end_time - start_time:.6f} segundos")
+        
+        elif opcao == "4":
+            break
+
+        else:
+            print("Opção inválida. Tente novamente.")
 
 def menu_principal():
     while True:
         print("\nMenu Principal:")
         print("1. Gerenciar Produtos")
         print("2. Gerenciar Acessos")
-        print("3. Sair")
+        print("3. Gerenciar Memória")
+        print("4. Sair")
 
         opcao = input("Escolha uma opção: ")
 
@@ -112,6 +172,8 @@ def menu_principal():
         elif opcao == "2":
             menu_acessos()
         elif opcao == "3":
+            menu_memoria()
+        elif opcao == "4":
             print("Saindo do programa.")
             break
         else:
