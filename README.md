@@ -1,103 +1,148 @@
-# Estrutura do Projeto
-O projeto está organizado em diferentes módulos para lidar com produtos e acessos, utilizando arquivos binários para armazenar dados. Aqui estão os principais módulos e suas funções:
+# Sistema de Gerenciamento de Produtos e Acessos
 
-## Arquivo main.py
-Este arquivo contém a função principal do programa, além de menus para acessar e operar os dados de produtos e acessos.
+Este projeto implementa um sistema de gerenciamento para produtos e acessos em uma loja de e-commerce, utilizando arquivos binários e índices para otimizar a pesquisa e a manipulação de dados. O sistema permite a inserção, exclusão lógica e consulta de produtos e acessos de forma eficiente.
 
-### Funções:
-```python
-ajustar_tamanho(campo, tamanho)
-Ajusta o tamanho de um campo de texto, preenchendo espaços em branco para garantir que cada campo tenha o tamanho correto, ou cortando se exceder o limite.
+## Estrutura do Projeto
 
-csv_para_binario_produto(arquivo_csv, arquivo_bin)
-Converte um arquivo CSV de produtos em um arquivo binário, com tamanhos de campos fixos. Usa a função ajustar_tamanho para garantir o tamanho correto de cada campo.
+O projeto contém duas principais funcionalidades:
 
-csv_para_binario_acesso(arquivo_csv, arquivo_bin)
-Converte um arquivo CSV de acessos em um arquivo binário de campos fixos, semelhante à função de produtos.
+1. **Gerenciamento de Produtos**:
+   - Armazenamento de informações sobre produtos em um arquivo binário.
+   - Suporte à inserção, exibição e exclusão lógica de produtos.
+   - Criação e atualização de um índice para acesso rápido aos produtos.
 
-menu()
-Exibe o menu principal do programa, permitindo ao usuário escolher entre as opções de acessar o menu de produtos, menu de acessos ou sair do programa.
+2. **Gerenciamento de Acessos**:
+   - Registro de ações dos usuários no e-commerce.
+   - Suporte à inserção, exibição e exclusão lógica de acessos.
 
-menuProdutos()
-Exibe as opções relacionadas a produtos, como mostrar dados, realizar pesquisa binária, consultar dados, inserir, remover ou salvar informações de produtos.
+## Estruturas de Dados
 
-menuAcessos()
-Exibe as opções relacionadas aos dados de acessos, incluindo mostrar, realizar pesquisa binária, inserir, remover e salvar dados de acessos.
+### Produtos
 
-main()
-A função principal que executa o programa, converte os arquivos CSV para binário, e controla a navegação pelos menus, chamando as funções específicas de produtos e acessos.
-```
+Os dados dos produtos são armazenados em um arquivo binário (`produtos.bin`) com a seguinte estrutura:
 
-## Arquivo products.py
-Este arquivo contém as funções relacionadas à manipulação dos dados binários de 
-produtos.
+| Campo     | Tipo       | Tamanho |
+|-----------|------------|---------|
+| ID        | String     | 10 bytes|
+| Marca     | String     | 20 bytes|
+| Nome      | String     | 30 bytes|
+| Preço     | Float      | 4 bytes |
+| Excluído  | Boolean    | 1 byte  |
 
-```python
-Funções:
-ajustar_tamanho(campo, tamanho)
-Ajusta o tamanho do campo como descrito anteriormente.
+### Acessos
 
-mostrar_dados_produtos()
-Lê e exibe os dados dos produtos armazenados no arquivo binário dados_produto_fixo.bin.
+Os dados de acessos são armazenados em um arquivo binário (`acessos.bin`) com a seguinte estrutura:
 
-pesquisa_binaria_produtos(nome_arquivo, chave_procurada)
-Realiza uma pesquisa binária em um arquivo binário de produtos para localizar um produto específico com base no seu ID.
+| Campo       | Tipo       | Tamanho |
+|-------------|------------|---------|
+| ID          | String     | 10 bytes|
+| ID Sessão   | String     | 10 bytes|
+| Ação        | String     | 20 bytes|
+| Excluído    | Boolean    | 1 byte  |
 
-gerar_indice_produto(nome_arquivo, nome_indice)
-Gera um arquivo de índice a partir dos dados de produtos, armazenando a chave (ID do produto) e a posição no arquivo binário, para otimizar futuras pesquisas.
+## Funcionalidades
 
-pesquisa_binaria_por_indice(nome_indice, chave_procurada)
-Realiza uma pesquisa binária no arquivo de índice para localizar a posição de um registro no arquivo binário de produtos.
+### Produtos
 
-inserir_dados_produto(dados)
-Insere novos dados de produto no arquivo binário. Os dados são convertidos para binário utilizando a função ajustar_tamanho e são escritos no arquivo.
+- **Inserir Produto**: Adiciona um novo produto ao sistema. O índice é atualizado automaticamente.
+- **Exibir Produtos**: Mostra todos os produtos cadastrados que não foram excluídos.
+- **Criar Índice de Produtos**: Gera um índice para acesso rápido aos produtos.
+- **Pesquisar Produto por ID**: Busca um produto específico pelo seu ID.
+- **Excluir Produto**: Realiza a exclusão lógica de um produto, marcando-o como excluído.
 
-remover_produto_por_id(id_remocao)
-Remove um produto do arquivo binário baseado no ID. Os dados são lidos e reescritos, exceto o produto que corresponde ao ID fornecido.
-```
+### Acessos
 
-## Arquivo accesses.py
-Este arquivo contém as funções relacionadas à manipulação dos dados binários de acessos de usuários.
+- **Inserir Acesso**: Adiciona um novo registro de acesso ao sistema.
+- **Exibir Acessos**: Mostra todos os acessos registrados que não foram excluídos.
+- **Excluir Acesso**: Realiza a exclusão lógica de um acesso, marcando-o como excluído.
 
-### Funções:
-```python
-ajustar_tamanho(campo, tamanho)
-Ajusta o tamanho do campo de texto, semelhante às funções dos outros módulos.
+## Uso
 
-mostrar_dados_acessos()
-Lê e exibe os dados dos acessos armazenados no arquivo binário dados_acesso_fixo.bin.
+Para executar o sistema, você deve ter Python instalado em sua máquina. Siga as etapas abaixo:
 
-pesquisa_binaria_acessos(chave, campo='User_id')
-Realiza uma pesquisa binária no arquivo de acessos para localizar um acesso específico com base no User_id.
+1. Clone este repositório:
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   cd <NOME_DO_DIRETORIO>
+2. python com versão acima de 3.6.8
+3. Comando para dar start na main --> python main.py
 
-inserir_dados_acesso(dados)
-Insere novos dados de acesso no arquivo binário. Os campos são ajustados com a função ajustar_tamanho e os dados são convertidos para binário e gravados no arquivo.
+--------------------------------------------------------------------------------------------------
 
-remover_acesso_por_id(id_remocao)
-Remove um acesso do arquivo binário baseado no ID. Todos os dados são lidos e os registros, exceto o que corresponde ao ID, são reescritos.
-```
+# Resumo do Trabalho de Implementação de Arquivos de Dados e Índices
 
-## Fluxo de Execução
-Conversão CSV para Binário
-Na inicialização do programa, as funções csv_para_binario_produto e csv_para_binario_acesso convertem os arquivos CSV em arquivos binários com tamanho de campos fixos. Isso garante que os registros ocupem um espaço constante no arquivo.
+## Objetivo Geral
+Criar arquivos de dados e índices para uma organização sequencial-indexada utilizando dados de comportamento em um e-commerce.
 
-## Menus
-Após a conversão, o menu principal é exibido, permitindo que o usuário escolha entre os menus de produtos e acessos. Cada menu oferece opções como visualização, inserção, remoção e pesquisa de dados.
+## Contexto
+- **Dataset**: Dados de acessos a um e-commerce durante 7 meses, incluindo informações de usuários, produtos e comportamentos (visualizações, compras, etc.).
+- **Fonte do Dataset**: [Kaggle - E-commerce Behavior Data](https://www.kaggle.com/datasets/mkechinov/ecommerce-behavior-data-from-multi-category-store)
 
-## Manipulação de Dados
-Nos menus de produtos e acessos, as funções relacionadas a pesquisa binária permitem ao usuário localizar registros de forma eficiente. A inserção e remoção de dados também são feitas de forma organizada, mantendo a estrutura dos arquivos binários.
+## Atividades a Realizar
 
-## Geração de Índices
-A função gerar_indice_produto cria um arquivo de índice para otimizar a busca de registros no arquivo binário de produtos, utilizando chaves e posições.
+1. **Definição do Contexto a ser Explorando**:
+   - Estabelecer o contexto do comportamento em e-commerce e as perguntas que serão respondidas com os dados.
 
+2. **Montagem dos Arquivos de Dados**:
+   - Criar pelo menos dois arquivos de dados:
+     - **Arquivo de Produtos**: Contendo informações sobre produtos (ex.: ID, nome, preço).
+     - **Arquivo de Acessos**: Contendo dados de acessos ao site (ex.: ID do acesso, ID do usuário, ID do produto).
+   - **Estrutura dos Arquivos**:
+     - Cada arquivo deve conter pelo menos três campos, incluindo um campo chave (não repetido) e um campo com informações repetidas.
+     - Os dados devem ser organizados sequencialmente, preferencialmente pelo campo chave.
+     - Os arquivos devem ser salvos em modo binário e os registros devem ter tamanho fixo.
 
-Falta:
+3. **Implementação das Funções para Cada Arquivo de Dados**:
+   - **Inserção de Dados**: Função que ordena e insere os dados.
+   - **Exibição de Dados**: Função para mostrar os dados do arquivo.
+   - **Pesquisa Binária**: Função para realizar a pesquisa binária no arquivo de índice.
+   - **Consulta de Dados**: Função para consultar dados usando a pesquisa binária.
 
-O código atual possui a estrutura básica para manipular produtos e acessos, mas ainda precisa de várias implementações e ajustes para atender completamente aos requisitos do trabalho. Para que o código atenda a todas as atividades descritas, você precisará implementar o seguinte:
+4. **Criação de Índices**:
+   - Criar um arquivo de índice parcial para cada arquivo de dados.
+   - Implementar uma função para consultar dados a partir do índice usando pesquisa binária.
 
-Funções para criar e gravar arquivos de dados em formato binário.
-Implementar registros de tamanho fixo com preenchimento de espaços.
-Criar e gerenciar arquivos de índice, com funções de pesquisa binária para acessá-los.
-Implementar lógica para a atualização dos índices ao adicionar ou remover registros.
-Documentar o código e preparar o projeto para publicação no GitHub.
-Se precisar de ajuda para implementar essas partes específicas, sinta-se à vontade para pedir!
+5. **Inserção/Remoção de Dados e Reconstrução do Índice**:
+   - Gerenciar a inserção de novos registros e a remoção de registros.
+   - Definir se a reconstrução do índice ocorre após cada inserção/remoção ou segue um outro critério.
+
+6. **Documentação e Postagem**:
+   - Descrever os arquivos de dados e os arquivos de índices.
+   - Criar um repositório no GitHub com o código-fonte, arquivos de dados e índices gerados.
+
+----------------------------------------------------------------------------------------------
+
+# Critérios de Avaliação
+
+## 1. Implementação dos Arquivos de Dados
+- **Descrição**: Avalia a implementação dos arquivos de dados.
+- **Critérios**:
+  - Explicação da forma como os arquivos foram implementados.
+  - Detalhamento do processo de ordenação dos dados na apresentação.
+
+## 2. Implementação dos Índices Parciais de Arquivos
+- **Descrição**: Avalia a criação e utilização dos índices.
+- **Critérios**:
+  - Explicação da forma como os índices foram implementados.
+  - Demonstração de como os índices são utilizados para consultas na apresentação.
+
+## 3. Implementação de Inserção e Remoção de Dados
+- **Descrição**: Avalia a estrutura para manipulação de dados.
+- **Critérios**:
+  - Estrutura lógica para inserção de novos registros.
+  - Método de remoção de registros.
+  - Estratégia para reorganização dos arquivos e índices após inserções ou remoções.
+
+## 4. Apresentação
+- **Descrição**: Avalia a apresentação das funcionalidades implementadas.
+- **Critérios**:
+  - Utilização da pesquisa binária nos arquivos de índices e de dados.
+  - Demonstração do uso dos índices para consultas.
+  - Explicação da forma como esses elementos foram implementados na apresentação.
+
+## 5. Entrega do Material Solicitado
+- **Descrição**: Avalia a entrega do material necessário.
+- **Critérios**:
+  - Upload do código fonte.
+  - Descrição das estruturas dos índices e das consultas realizadas.
+  - Disponibilização dos arquivos de dados e de índices no GitHub.

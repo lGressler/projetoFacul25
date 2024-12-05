@@ -3,7 +3,7 @@ from products import (
     pesquisa_binaria_produto, excluir_produto
 )
 from accesses import (
-    inserir_acesso, exibir_acessos, excluir_acesso
+    inserir_acesso, exibir_acessos, excluir_acesso, criar_acessos_exemplo
 )
 
 def menu_produtos():
@@ -59,7 +59,8 @@ def menu_acessos():
         print("1. Inserir acesso")
         print("2. Exibir todos os acessos")
         print("3. Excluir acesso por ID")
-        print("4. Voltar ao menu principal")
+        print("4. Criar acessos de exemplo")
+        print("5. Voltar ao menu principal")
 
         opcao = input("Escolha uma opção: ")
 
@@ -80,6 +81,18 @@ def menu_acessos():
             print("Acesso excluído logicamente com sucesso!")
 
         elif opcao == "4":
+            acessos_exemplo = [
+                (1, 'S1', 'Olhou'),
+                (2, 'S2', 'Comprou'),
+                (1, 'S1', 'Olhou'),
+                (2, 'S2', 'Comprou'),
+                (54, '22', 'Olhou'),
+                (65, 'S1', 'Comprou')
+            ]
+            criar_acessos_exemplo(acessos_exemplo)
+            print("Acessos de exemplo criados com sucesso!")
+
+        elif opcao == "5":
             break
 
         else:
