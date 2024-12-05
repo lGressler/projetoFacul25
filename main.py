@@ -180,62 +180,6 @@ def menu_principal():
             break
         else:
             print("Opção inválida. Tente novamente.")
-            
-# Função para gerar os IDs sequenciais no formato A, B, C, ..., Z, AA, AB, ...
-def gerar_ids(n):
-    ids = []
-    for i in range(n):
-        id_atual = ''
-        num = i
-        while num >= 0:
-            id_atual = chr(num % 26 + ord('A')) + id_atual
-            num = num // 26 - 1
-        ids.append(id_atual)
-    return ids
 
-# Função para gerar produtos de exemplo
-def gerar_produtos_exemplo():
-    # Lista de marcas e modelos para criar produtos
-    marcas = ["Apple", "Samsung", "Dell", "Sony", "Google", "LG", "Xiaomi", "Huawei", "Microsoft", "Lenovo"]
-    modelos = [
-        "iPhone 12", "Galaxy S21", "Inspiron 15", "PlayStation 5", "Pixel 5", 
-        "iPhone 13", "Galaxy Note 20", "MacBook Pro", "PlayStation 4", "Surface Laptop"
-    ]
-    
-    # Gerar 1000 IDs sequenciais
-    ids_produtos = gerar_ids(500)
-    
-    produtos = []
-    nomes_existentes = {}  # Dicionário para armazenar os nomes e contagens
-    
-    for i in range(500):  # Alterar para 1000 produtos
-        marca = random.choice(marcas)
-        nome = random.choice(modelos)
-        
-        # Verifica se o nome já existe e cria um nome único
-        if nome in nomes_existentes:
-            nomes_existentes[nome] += 1
-            nome = f"{nome} ({nomes_existentes[nome]})"
-        else:
-            nomes_existentes[nome] = 0
-        
-        preco = round(random.uniform(1000.00, 5000.00), 2)  # Preço aleatório entre 1000.00 e 5000.00
-        id_produto = ids_produtos[i]  # Atribui o ID gerado para o produto
-        produtos.append((id_produto, marca, nome, preco))
-    
-    return produtos
-
-# Função para inserir 1000 produtos
-def inserir_1000_produtos():
-    produtos = gerar_produtos_exemplo()
-    for produto in produtos:
-        id_produto, marca, nome, preco = produto
-        inserir_produto(id_produto, marca, nome, preco)
-        print(f"Produto {id_produto} inserido: {marca} - {nome} - R${preco:.2f}")
-    
-    # Exibe uma mensagem de conclusão
-    print("1000 produtos inseridos com sucesso!")
-
-if __name__ == "__main__":
-    inserir_1000_produtos()    
+if __name__ == "__main__": 
     menu_principal()
