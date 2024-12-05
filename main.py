@@ -107,7 +107,7 @@ def menu_acessos():
             
 def menu_memoria():
     arvore_bplus = criar_indice_produto_arvore()  # Criar a árvore B+ na memória
-    tabela_hash = criar_indice_produto_hash()  # Criar a tabela hash na memória
+    tabela_hash = criar_indice_produto_hash(campo_busca="marca")  # ou "nome" dependendo da escolha
 
     while True:
         print("\nMenu de Memória:")
@@ -136,13 +136,13 @@ def menu_memoria():
             print(f"Tempo de busca na árvore B+: {end_time - start_time:.6f} segundos")
         
         elif opcao == "3":
-            print("\nProdutos na Tabela Hash:")
-            tabela_hash.exibir_tabela()
-            
-            id_busca = input("Digite o ID do produto para buscar: ").upper()
+            print("\nConsulta na Tabela Hash:")
+            chave_busca = input("Digite a Marca do produto para buscar: ")
+
             start_time = time.time()
-            resultado = obter_produto_completo_hash(id_busca, tabela_hash)  # Buscar o produto na tabela hash
+            resultado = obter_produto_completo_hash(chave_busca, tabela_hash)  # Buscar o produto na tabela hash
             end_time = time.time()
+
             if resultado:
                 id_produto, marca, nome, preco = resultado
                 print(f"Produto encontrado: ID: {id_produto}, Marca: {marca}, Nome: {nome}, Preço: {preco:.2f}")
