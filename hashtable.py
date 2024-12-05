@@ -15,9 +15,9 @@ class Produto:
         return f"ID: {self.id_produto}, Marca: {self.marca}, Nome: {self.nome}, Preço: {self.preco}"
 
 class TabelaHash:
-    def __init__(self, tamanho=100, campo_busca="marca"):
+    def __init__(self, tamanho=100, campo_busca="nome"):
         """
-        A tabela hash será construída com base no campo de busca que pode ser "marca" ou "nome".
+        A tabela hash será construída com base no campo de busca, que pode ser "marca" ou "nome".
         """
         self.tamanho = tamanho
         self.tabela = [[] for _ in range(tamanho)]
@@ -62,7 +62,7 @@ class TabelaHash:
                     print(produto)
 
 # Função para criar o índice na tabela hash
-def criar_indice_produto_hash(campo_busca="marca"):
+def criar_indice_produto_hash(campo_busca="nome"):
     tabela_hash = TabelaHash(campo_busca=campo_busca)
     
     with open(produto_file, "rb") as f:

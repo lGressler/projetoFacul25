@@ -1,3 +1,6 @@
+from collections import defaultdict
+import pickle
+import struct
 import time
 import random
 from arvore import criar_indice_produto_arvore
@@ -31,7 +34,6 @@ def menu_produtos():
             print("Produto inserido com sucesso!")
         
         elif opcao == "2":
-            print("\nProdutos:")
             exibir_produtos()
         
         elif opcao == "3":
@@ -108,19 +110,18 @@ def menu_acessos():
             
 def menu_memoria():
     arvore_bplus = criar_indice_produto_arvore()  # Criar a árvore B+ na memória
-    tabela_hash = criar_indice_produto_hash(campo_busca="marca")  # ou "nome" dependendo da escolha
+    tabela_hash = criar_indice_produto_hash(campo_busca="nome")
 
     while True:
         print("\nMenu de Memória:")
         print("1. Exibir produtos")
         print("2. Consultar produto por ID (Índice Memória / árvore B+)")
-        print("3. Consultar produto por ID (Tabela Hash)")
+        print("3. Consultar produto por nome (Tabela Hash)")
         print("4. Voltar ao menu principal")
 
         opcao = input("Escolha uma opção: ")
 
         if opcao == "1":
-            print("\nProdutos:")
             exibir_produtos()
         
         elif opcao == "2":
@@ -138,7 +139,7 @@ def menu_memoria():
         
         elif opcao == "3":
             print("\nConsulta na Tabela Hash:")
-            chave_busca = input("Digite a Marca do produto para buscar: ")
+            chave_busca = input("Digite o nome do produto para buscar: ")
 
             start_time = time.time()
             resultado = obter_produto_completo_hash(chave_busca, tabela_hash)  # Buscar o produto na tabela hash
@@ -179,69 +180,62 @@ def menu_principal():
             break
         else:
             print("Opção inválida. Tente novamente.")
+            
+# Função para gerar os IDs sequenciais no formato A, B, C, ..., Z, AA, AB, ...
+def gerar_ids(n):
+    ids = []
+    for i in range(n):
+        id_atual = ''
+        num = i
+        while num >= 0:
+            id_atual = chr(num % 26 + ord('A')) + id_atual
+            num = num // 26 - 1
+        ids.append(id_atual)
+    return ids
 
-# def gerar_proximo_id(id_atual):
-#     """
-#     Gera o próximo ID sequencial a partir de um ID passado, 
-#     considerando o formato de IDs como A, B, C, ..., Z, AA, AB, ..., AZ, BA, BB, ..., ZZ, AAA, AAB, ...
-#     """
-#     def incrementa_id(id_str):
-#         # Incrementa o ID, considerando IDs com mais de duas letras após ZZ.
-#         id_list = list(id_str)
-#         i = len(id_list) - 1
-#         while i >= 0:
-#             if id_list[i] == 'Z':
-#                 id_list[i] = 'A'
-#                 i -= 1
-#             else:
-#                 id_list[i] = chr(ord(id_list[i]) + 1)
-#                 break
+# Função para gerar produtos de exemplo
+def gerar_produtos_exemplo():
+    # Lista de marcas e modelos para criar produtos
+    marcas = ["Apple", "Samsung", "Dell", "Sony", "Google", "LG", "Xiaomi", "Huawei", "Microsoft", "Lenovo"]
+    modelos = [
+        "iPhone 12", "Galaxy S21", "Inspiron 15", "PlayStation 5", "Pixel 5", 
+        "iPhone 13", "Galaxy Note 20", "MacBook Pro", "PlayStation 4", "Surface Laptop"
+    ]
+    
+    # Gerar 1000 IDs sequenciais
+    ids_produtos = gerar_ids(500)
+    
+    produtos = []
+    nomes_existentes = {}  # Dicionário para armazenar os nomes e contagens
+    
+    for i in range(500):  # Alterar para 1000 produtos
+        marca = random.choice(marcas)
+        nome = random.choice(modelos)
         
-#         # Caso o primeiro caractere tenha "zerado", inserimos uma nova letra à esquerda.
-#         if id_list[0] == 'A' and len(id_list) > 1:
-#             # Verifica se todos os caracteres estão como 'A' (indicando que devemos adicionar um novo nível).
-#             if all(ch == 'A' for ch in id_list):
-#                 id_list.insert(0, 'A')
+        # Verifica se o nome já existe e cria um nome único
+        if nome in nomes_existentes:
+            nomes_existentes[nome] += 1
+            nome = f"{nome} ({nomes_existentes[nome]})"
+        else:
+            nomes_existentes[nome] = 0
         
-#         return ''.join(id_list)
+        preco = round(random.uniform(1000.00, 5000.00), 2)  # Preço aleatório entre 1000.00 e 5000.00
+        id_produto = ids_produtos[i]  # Atribui o ID gerado para o produto
+        produtos.append((id_produto, marca, nome, preco))
+    
+    return produtos
 
-#     return incrementa_id(id_atual)
-
-# def gerar_produtos_exemplo():
-#     # Lista de marcas e modelos para criar produtos
-#     marcas = ["Apple", "Samsung", "Dell", "Sony", "Google", "LG", "Xiaomi", "Huawei", "Microsoft", "Lenovo"]
-#     modelos = [
-#         "iPhone 12", "Galaxy S21", "Inspiron 15", "PlayStation 5", "Pixel 5", 
-#         "iPhone 13", "Galaxy Note 20", "MacBook Pro", "PlayStation 4", "Surface Laptop"
-#     ]
+# Função para inserir 1000 produtos
+def inserir_1000_produtos():
+    produtos = gerar_produtos_exemplo()
+    for produto in produtos:
+        id_produto, marca, nome, preco = produto
+        inserir_produto(id_produto, marca, nome, preco)
+        print(f"Produto {id_produto} inserido: {marca} - {nome} - R${preco:.2f}")
     
-#     # ID inicial (começando de 'ZV' conforme sua solicitação)
-#     id_produto = 'ZV'
-    
-#     produtos = []
-#     for i in range(100):
-#         marca = random.choice(marcas)
-#         nome = random.choice(modelos)
-#         preco = round(random.uniform(1000.00, 5000.00), 2)  # Preço aleatório entre 1000.00 e 5000.00
-#         produtos.append((id_produto, marca, nome, preco))
-        
-#         # Gera o próximo ID para o próximo produto
-#         id_produto = gerar_proximo_id(id_produto)
-    
-#     return produtos
-
-# def inserir_100_produtos():
-#     produtos = gerar_produtos_exemplo()
-#     for produto in produtos:
-#         id_produto, marca, nome, preco = produto
-#         # Usar a função de inserção do produto
-#         inserir_produto(id_produto, marca, nome, preco)
-#         print(f"Produto {id_produto} inserido: {marca} - {nome} - R${preco:.2f}")
-    
-#     # Exibe uma mensagem de conclusão
-#     print("100 produtos inseridos com sucesso!")
+    # Exibe uma mensagem de conclusão
+    print("1000 produtos inseridos com sucesso!")
 
 if __name__ == "__main__":
-    # inserir_100_produtos()
-    
+    inserir_1000_produtos()    
     menu_principal()
