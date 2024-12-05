@@ -1,4 +1,5 @@
 import time
+import random
 from arvore import criar_indice_produto_arvore
 from hashtable import criar_indice_produto_hash, obter_produto_completo_hash
 from products import (
@@ -179,5 +180,68 @@ def menu_principal():
         else:
             print("Opção inválida. Tente novamente.")
 
+# def gerar_proximo_id(id_atual):
+#     """
+#     Gera o próximo ID sequencial a partir de um ID passado, 
+#     considerando o formato de IDs como A, B, C, ..., Z, AA, AB, ..., AZ, BA, BB, ..., ZZ, AAA, AAB, ...
+#     """
+#     def incrementa_id(id_str):
+#         # Incrementa o ID, considerando IDs com mais de duas letras após ZZ.
+#         id_list = list(id_str)
+#         i = len(id_list) - 1
+#         while i >= 0:
+#             if id_list[i] == 'Z':
+#                 id_list[i] = 'A'
+#                 i -= 1
+#             else:
+#                 id_list[i] = chr(ord(id_list[i]) + 1)
+#                 break
+        
+#         # Caso o primeiro caractere tenha "zerado", inserimos uma nova letra à esquerda.
+#         if id_list[0] == 'A' and len(id_list) > 1:
+#             # Verifica se todos os caracteres estão como 'A' (indicando que devemos adicionar um novo nível).
+#             if all(ch == 'A' for ch in id_list):
+#                 id_list.insert(0, 'A')
+        
+#         return ''.join(id_list)
+
+#     return incrementa_id(id_atual)
+
+# def gerar_produtos_exemplo():
+#     # Lista de marcas e modelos para criar produtos
+#     marcas = ["Apple", "Samsung", "Dell", "Sony", "Google", "LG", "Xiaomi", "Huawei", "Microsoft", "Lenovo"]
+#     modelos = [
+#         "iPhone 12", "Galaxy S21", "Inspiron 15", "PlayStation 5", "Pixel 5", 
+#         "iPhone 13", "Galaxy Note 20", "MacBook Pro", "PlayStation 4", "Surface Laptop"
+#     ]
+    
+#     # ID inicial (começando de 'ZV' conforme sua solicitação)
+#     id_produto = 'ZV'
+    
+#     produtos = []
+#     for i in range(100):
+#         marca = random.choice(marcas)
+#         nome = random.choice(modelos)
+#         preco = round(random.uniform(1000.00, 5000.00), 2)  # Preço aleatório entre 1000.00 e 5000.00
+#         produtos.append((id_produto, marca, nome, preco))
+        
+#         # Gera o próximo ID para o próximo produto
+#         id_produto = gerar_proximo_id(id_produto)
+    
+#     return produtos
+
+# def inserir_100_produtos():
+#     produtos = gerar_produtos_exemplo()
+#     for produto in produtos:
+#         id_produto, marca, nome, preco = produto
+#         # Usar a função de inserção do produto
+#         inserir_produto(id_produto, marca, nome, preco)
+#         print(f"Produto {id_produto} inserido: {marca} - {nome} - R${preco:.2f}")
+    
+#     # Exibe uma mensagem de conclusão
+#     print("100 produtos inseridos com sucesso!")
+
 if __name__ == "__main__":
+    # inserir_100_produtos()
+    
     menu_principal()
