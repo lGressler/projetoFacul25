@@ -3,7 +3,7 @@ import pickle
 import struct
 import time
 import random
-from arvore import criar_indice_produto_arvore
+from arvore import criar_indice_produto_arvore, excluir_produto_arvore, inserir_produto_arvore
 from hashtable import criar_indice_produto_hash, obter_produto_completo_hash
 from products import (
     inserir_produto, exibir_produtos, criar_indice_produto,
@@ -117,7 +117,9 @@ def menu_memoria():
         print("1. Exibir produtos")
         print("2. Consultar produto por ID (Índice Memória / árvore B+)")
         print("3. Consultar produto por nome (Tabela Hash)")
-        print("4. Voltar ao menu principal")
+        print("4. Inserir produto pela arvore (árvore B+)")
+        print("5. Excluir produto pela arvore (árvore B+)")
+        print("6. Voltar ao menu principal")
 
         opcao = input("Escolha uma opção: ")
 
@@ -152,8 +154,31 @@ def menu_memoria():
                 print("Produto não encontrado.")
                 
             print(f"Tempo de busca na Tabela Hash: {end_time - start_time:.6f} segundos")
-        
+            
         elif opcao == "4":
+            print("\nInserir produto pela arvore (árvore B+):")
+            id_produto = input("ID do Produto: ").upper()
+            marca = input("Marca do Produto: ")
+            nome = input("Nome do Produto: ")
+            preco = float(input("Preço do Produto: "))
+            
+            start_time = time.time()
+            inserir_produto_arvore(arvore_bplus, id_produto, marca, nome, preco)
+            end_time = time.time()
+            
+            print(f"Tempo de inserção na árvore B+: {end_time - start_time:.6f} segundos")
+            
+        elif opcao == "5":
+            print("\nExcluir produto pela arvore (árvore B+):")
+            id_produto = input("ID do Produto para excluir: ").upper()
+            
+            start_time = time.time()
+            excluir_produto_arvore(arvore_bplus, id_produto)
+            end_time = time.time()
+            
+            print(f"Tempo de exclusão na árvore B+: {end_time - start_time:.6f} segundos")
+        
+        elif opcao == "6":
             break
 
         else:

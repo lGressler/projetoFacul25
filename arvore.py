@@ -112,6 +112,41 @@ class ArvoreBPlus:
             return None  # Se o nó for folha e não encontrar, retorna None
         else:
             return self._buscar_no(nodo.pontos[i], id_produto)  # Busca recursiva nos filhos
+        
+    def remover(self, id_produto):
+        """
+        Remove uma chave (ID do produto) da árvore B+ sem excluir fisicamente os dados do arquivo.
+        A exclusão será feita de forma lógica.
+        """
+        nodo = self.raiz
+        # Verifica se a chave existe na árvore
+        if id_produto in nodo.chaves:
+            # Marca o produto como excluído na árvore
+            index = nodo.chaves.index(id_produto)
+            nodo.chaves.pop(index)
+            nodo.pontos.pop(index)
+            return True
+        else:
+            # Se a chave não estiver no nó atual, busca recursivamente nos filhos
+            return self._remover_no(nodo, id_produto)
+
+    def _remover_no(self, nodo, id_produto):
+        """
+        Realiza a remoção recursiva no nó e ajusta a árvore conforme necessário.
+        """
+        i = 0
+        while i < len(nodo.chaves) and nodo.chaves[i] < id_produto:
+            i += 1
+
+        if i < len(nodo.chaves) and nodo.chaves[i] == id_produto:
+            # Se encontrou a chave, remove do nó folha
+            nodo.chaves.pop(i)
+            nodo.pontos.pop(i)
+            return True
+        elif nodo.folhas:
+            return False
+        else:
+            return self._remover_no(nodo.pontos[i], id_produto)
 
 # Atualizando a função de criar o índice para usar uma árvore B+ em memória
 def criar_indice_produto_arvore():
@@ -164,3 +199,72 @@ def obter_produto_completo(offset):
     except Exception as e:
         print(f"Erro ao acessar o arquivo: {e}")
         return None
+    
+def pad_string(value, length):
+    """
+    Preenche o valor com espaços até o tamanho fixo especificado.
+    """
+    return value.ljust(length)
+
+def inserir_produto_arvore(arvore_bplus, id_produto, marca, nome, preco):
+    """
+    Insere um novo produto na árvore binária.
+    Atualiza o índice.
+    """
+    
+    print(f"Valor de preco: {preco} - Tipo de preco: {type(preco)}")  # Verificando o tipo do preco
+    
+    id_produto = pad_string(id_produto, 10)
+    marca = pad_string(marca, 20)
+    
+    # Verificar e garantir que 'nome' seja uma string
+    if not isinstance(nome, str):
+        nome = str(nome)  # Forçar conversão para string
+    
+    nome = pad_string(nome, 30)  # Agora podemos garantir que 'nome' é uma string
+    
+    # Registro do produto
+    with open(produto_file, "ab") as f:
+        registro = produto_struct.pack(id_produto.encode('utf-8'), 
+                                       marca.encode('utf-8'), 
+                                       nome.encode('utf-8'), 
+                                       float(preco), 
+                                       False)
+        f.write(registro)
+    
+    # Inserir o produto na árvore binária (usando id_produto como chave)
+    arvore_bplus.inserir(id_produto, (marca, nome, preco))
+
+    # Atualiza o índice após a inserção
+    criar_indice_produto_arvore()
+    
+def excluir_produto_arvore(arvore_bplus, id_produto):
+    """
+    Exclui logicamente um produto pelo ID e atualiza o índice.
+    A exclusão lógica é feita na árvore binária.
+    """
+    produtos_temp = []
+    
+    # Para exclusão no arquivo binário
+    with open(produto_file, "rb") as f:
+        while True:
+            chunk = f.read(produto_struct.size)
+            if len(chunk) < produto_struct.size:
+                break  # Para ao ler dados menores que o tamanho esperado
+            registro = produto_struct.unpack(chunk)
+            if registro[0].decode().strip() == id_produto:
+                # Marca como excluído --> exclusão lógica
+                produtos_temp.append((registro[0], registro[1], registro[2], registro[3], True))
+            else:
+                produtos_temp.append(registro)
+
+    # Reescreve o arquivo com os registros atualizados
+    with open(produto_file, "wb") as f:
+        for registro in produtos_temp:
+            f.write(produto_struct.pack(*registro))
+
+    # Remover o produto da árvore binária
+    arvore_bplus.remover(id_produto)
+
+    # Atualiza o índice após exclusão
+    criar_indice_produto_arvore()
