@@ -4,7 +4,7 @@ import struct
 import time
 import random
 from arvore import criar_indice_produto_arvore, excluir_produto_arvore, inserir_produto_arvore
-from hashtable import criar_indice_produto_hash, obter_produto_completo_hash
+from hashtable import Produto, criar_indice_produto_hash, excluir_produto_hashtable, inserir_produto_hashtable, obter_produto_completo_hash
 from products import (
     inserir_produto, exibir_produtos, criar_indice_produto,
     pesquisa_binaria_produto, excluir_produto
@@ -119,7 +119,9 @@ def menu_memoria():
         print("3. Consultar produto por nome (Tabela Hash)")
         print("4. Inserir produto pela arvore (árvore B+)")
         print("5. Excluir produto pela arvore (árvore B+)")
-        print("6. Voltar ao menu principal")
+        print("6. Inserir produto pela tabela hash")
+        print("7. Excluir produto pela tabela hash")
+        print("8. Voltar ao menu principal")
 
         opcao = input("Escolha uma opção: ")
 
@@ -179,6 +181,29 @@ def menu_memoria():
             print(f"Tempo de exclusão na árvore B+: {end_time - start_time:.6f} segundos")
         
         elif opcao == "6":
+            print("\nInserir produto pela tabela hash:")
+            id_produto = input("ID do Produto: ").upper()
+            marca = input("Marca do Produto: ")
+            nome = input("Nome do Produto: ")
+            preco = float(input("Preço do Produto: "))
+            
+            start_time = time.time()
+            inserir_produto_hashtable(tabela_hash, id_produto, marca, nome, preco)
+            end_time = time.time()
+            
+            print(f"Tempo de inserção na Tabela Hash: {end_time - start_time:.6f} segundos")
+            
+        elif opcao == "7":
+            print("\nExcluir produto pela tabela hash:")
+            nome_produto = input("Nome do Produto para excluir: ")
+            
+            start_time = time.time()
+            excluir_produto_hashtable(tabela_hash, nome_produto)
+            end_time = time.time()
+            
+            print(f"Tempo de exclusão na árvore B+: {end_time - start_time:.6f} segundos")
+            
+        elif opcao == "8":
             break
 
         else:

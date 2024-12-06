@@ -60,6 +60,18 @@ class TabelaHash:
             if lista:
                 for produto in lista:
                     print(produto)
+                    
+    def remover(self, chave_busca):
+        """
+        Remove um produto da tabela hash pelo campo de busca (marca ou nome).
+        """
+        indice = self._hash(chave_busca)
+        for i, produto in enumerate(self.tabela[indice]):
+            if getattr(produto, self.campo_busca) == chave_busca:
+                # Produto encontrado e removido
+                self.tabela[indice].pop(i)
+                return True  # Produto removido com sucesso
+        return False  # Produto não encontrado
 
 # Função para criar o índice na tabela hash
 def criar_indice_produto_hash(campo_busca="nome"):
@@ -100,3 +112,77 @@ def obter_produto_completo_hash(chave_busca, tabela_hash):
         return produto.id_produto, produto.marca, produto.nome, produto.preco
     else:
         return None
+    
+def pad_string(value, length):
+    """
+    Preenche o valor com espaços até o tamanho fixo especificado.
+    """
+    return value.ljust(length)
+
+def inserir_produto_hashtable(tabela_hash, id_produto, marca, nome, preco):
+    """
+    Insere um novo produto na tabela hash.
+    Atualiza o índice.
+    """
+    
+    id_produto = pad_string(id_produto, 10)
+    marca = pad_string(marca, 20)
+    
+    # Verificar e garantir que 'nome' seja uma string
+    if not isinstance(nome, str):
+        nome = str(nome)  # Forçar conversão para string
+    
+    nome = pad_string(nome, 30)  # Agora podemos garantir que 'nome' é uma string
+    
+    # Registro do produto
+    with open(produto_file, "ab") as f:
+        registro = produto_struct.pack(id_produto.encode('utf-8'), 
+                                       marca.encode('utf-8'), 
+                                       nome.encode('utf-8'), 
+                                       float(preco), 
+                                       False)
+        f.write(registro)
+    
+    # Inserir o produto na tabela hash
+    produto = Produto(id_produto, marca, nome, preco)
+    tabela_hash.inserir(produto)
+
+    # Atualiza o índice após a inserção
+    criar_indice_produto_hash(campo_busca="nome")
+    
+def excluir_produto_hashtable(tabela_hash, nome_produto):
+    """
+    Exclui logicamente um produto da tabela hash utilizando o nome do produto.
+    """
+    print(f"Excluindo Produto: {nome_produto}")
+    
+    # Atualizar arquivo binário para marcar o produto como excluído
+    produtos_temp = []
+    with open(produto_file, "rb") as f:
+        while True:
+            chunk = f.read(produto_struct.size)
+            if len(chunk) < produto_struct.size:
+                break
+            registro = produto_struct.unpack(chunk)
+            id_produto = registro[0].decode().strip()
+            marca = registro[1].decode().strip()
+            nome = registro[2].decode().strip()
+            preco = registro[3]
+            excluido = registro[4]
+            
+            # Se o nome corresponder ao nome que queremos excluir, marca como excluído logicamente
+            if nome == nome_produto and not excluido:
+                produtos_temp.append((id_produto.encode('utf-8'), marca.encode('utf-8'), nome.encode('utf-8'), preco, True))
+            else:
+                produtos_temp.append(registro)
+    
+    # Reescreve o arquivo com os registros atualizados
+    with open(produto_file, "wb") as f:
+        for registro in produtos_temp:
+            f.write(produto_struct.pack(*registro))
+
+    # Remover o produto da tabela hash
+    tabela_hash.remover(nome_produto)
+
+    # Atualiza o índice após a exclusão
+    criar_indice_produto_hash(campo_busca="nome")
