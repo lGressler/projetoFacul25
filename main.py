@@ -30,8 +30,13 @@ def menu_produtos():
             marca = input("Marca do Produto: ")
             nome = input("Nome do Produto: ")
             preco = float(input("Preço do Produto: "))
+            
+            start_time = time.time()
             inserir_produto(id_produto, marca, nome, preco)
             print("Produto inserido com sucesso!")
+            end_time = time.time()
+            
+            print(f"Tempo de inserção: {end_time - start_time:.6f} segundos")
         
         elif opcao == "2":
             exibir_produtos()
@@ -109,8 +114,17 @@ def menu_acessos():
             print("Opção inválida. Tente novamente.")
             
 def menu_memoria():
+    start_time_arvore = time.time()
     arvore_bplus = criar_indice_produto_arvore()  # Criar a árvore B+ na memória
+    end_time_arvore = time.time()
+    
+    print(f"Tempo de criação da árvore B+ na memória: {end_time_arvore - start_time_arvore:.6f} segundos")
+    
+    start_time_hash = time.time()
     tabela_hash = criar_indice_produto_hash(campo_busca="nome")
+    end_time_hash = time.time()
+    
+    print(f"Tempo de criação da tabela hash na memória: {end_time_hash - start_time_hash:.6f} segundos")
 
     while True:
         print("\nMenu de Memória:")
